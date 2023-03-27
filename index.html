@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Todo list app</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <style>
+
+            @import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+
+            :root {
+                --dark: #374151;
+                --darker: #1F2937;
+                --darkest: #111827;
+                --gray: #6B7280;
+                --light: #EEE;
+                --pink: #EC4899;
+                --purple: #8B5CF6
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Fira Sans', sans-serif
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                align-items: center;
+                background: var(--dark);
+                color: #fff
+            }
+
+            header {
+                width: min(800px, 90%);
+                margin: 0 auto
+            }
+
+            h1 {
+                font: 300 3rem/1.5em Fira Sans;
+                color: var(--gray);
+                margin-bottom: 1rem
+            }
+
+            #task-form {
+                display: flex
+            }
+
+            input, button {
+                background: none;
+                border: none;
+                outline: none;
+                appearance: none
+            }
+
+            #task-input {
+                flex: 1 1 0%;
+                background: var(--darker);
+                padding: 1rem;
+                border-radius: 1rem;
+                margin-right: 1rem;
+                color: var(--light);
+                font-size: 1rem
+            }
+
+            #task-input::placeholder {
+                color: var(--gray)
+            }
+
+            #task-submit {
+                color: var(--pink);
+                font: 700 1rem/1.5em Fira Sans;
+                background: linear-gradient(to right, var(--pink), var(--purple));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                cursor: pointer;
+                transition: .4s
+            }
+
+            #task-submit:hover {
+                opacity: .8
+            }
+
+            #task-submit:active {
+                opacity: .6
+            }
+
+            main {
+                flex: 1 1 0%;
+                width: min(800px, 90%);
+                margin: 1rem auto
+            }
+
+            h2 {
+                font: 300 1.5rem/1.5em Fira Sans;
+                color: var(--gray);
+                margin-bottom: 1rem
+            }
+
+            .task {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background-color: var(--darkest);
+                padding: 1rem;
+                border-radius: 1rem;
+                margin-bottom: 1rem
+            }
+
+            .content {
+                flex: 1 1 0%
+            }
+
+            .text {
+                color: var(--light);
+                font: 400 1rem/1.5em Fira Sans;
+                width: 100%;
+                display: block;
+                transition: .4s
+            }
+
+            .text:not(:read-only) {
+                color: var(--pink)
+            }
+
+            .actions {
+                display: flex
+            }
+
+            .actions button {
+                cursor: pointer;
+                margin: 0 .5rem;
+                font: 700 1rem/1.5em Fira Sans;
+                text-transform: uppercase;
+                transition: .4s
+            }
+
+            .actions button:hover {
+                opacity: .8
+            }
+
+            .actions button:active {
+                opacity: .6
+            }
+
+            .actions .edit {
+                background: linear-gradient(to right, var(--pink), var(--purple));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent
+            }
+
+            .actions .delete {
+                color: crimson
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Task list 2023</h1>
+
+            <form id="task-form">
+                <input type="text" id="task-input" placeholder="What do you have planned"/>
+                <input type="submit" id="task-submit" value="Add task"/>
+            </form>
+        </header>
+
+        <main>
+            <section>
+                <h2>Tasks</h2>
+
+                <div id="tasks">
+                    <!-- <div class="task">
+                        <div class="content">
+                            <input type="text" class="text" value="My first task" readonly/>
+                        </div>
+
+                        <div class="actions">
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </div>
+                    </div> -->
+                </div>
+            </section>
+        </main>
+        <script>
+
+            window.addEventListener('load', () => {
+                const form = document.querySelector("#task-form");
+                const input = document.querySelector("#task-input");
+                const list_el = document.querySelector("#tasks");
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    const task = input.value;
+
+                    if (!task) {
+                        alert("You forgot to fill the task");
+                        return;
+                    }
+
+                    const task_el = document.createElement("div");
+                    task_el.classList.add("task");
+
+                    const task_content_el = document.createElement("div");
+                    task_content_el.classList.add("content");
+
+                    task_el.appendChild(task_content_el);
+
+                    const task_input_el = document.createElement("input");
+                    task_input_el.classList.add("text");
+                    task_input_el.type = "text";
+                    task_input_el.value = task;
+                    task_input_el.setAttribute("readonly", "readonly");
+
+                    task_content_el.appendChild(task_input_el);
+
+                    list_el.appendChild(task_el);
+
+                    const task_actions_el = document.createElement("div");
+                    task_actions_el.classList.add("actions");
+
+                    const task_edit_el = document.createElement("button");
+                    task_edit_el.classList.add("edit");
+                    task_edit_el.innerHTML = "Edit";
+
+                    const task_delete_el = document.createElement("button");
+                    task_delete_el.classList.add("delete");
+                    task_delete_el.innerHTML = "Delete";
+
+                    task_actions_el.appendChild(task_edit_el);
+                    task_actions_el.appendChild(task_delete_el);
+
+                    task_el.appendChild(task_actions_el);
+
+                    list_el.appendChild(task_el);
+
+                    input.value = "";
+
+                    task_edit_el.addEventListener("click", () => {
+                        if (task_edit_el.innerText == "EDIT") {
+                            task_input_el.removeAttribute("readonly");
+                            task_input_el.focus();
+                            task_edit_el.innerText = "Save";
+                        }
+
+                        else {
+                            task_input_el.setAttribute("readonly", "readonly");
+                            task_edit_el.innerText = "Edit";
+                        }
+                    });
+
+                    task_delete_el.addEventListener("click", () =>  {
+                        list_el.removeChild(task_el);
+                    })
+                })
+            })
+
+        </script>
+    </body>
+</html>
